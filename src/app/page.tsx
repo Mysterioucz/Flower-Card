@@ -1,15 +1,5 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  Fade,
-  Grow,
-  Typography,
-  IconButton,
-  Tooltip,
-} from "@mui/material";
-import { Favorite, Share, VolumeUp } from "@mui/icons-material";
 
 interface Particle {
   id: number;
@@ -18,12 +8,12 @@ interface Particle {
   top: number;
   delay: number;
   color: string;
-};
+}
 interface Sparkle {
   id: number;
   x: number;
   y: number;
-};
+}
 
 const HydrangeaCard = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -130,6 +120,11 @@ const HydrangeaCard = () => {
     }, 1000);
   };
 
+  const message = {
+    secret: "You found the secret! 🌟 <br /> This means you're as curious and wonderful as I hoped you'd be 💫",
+    meaning: "Hydrangeas symbolize heartfelt emotions, gratitude, and understanding. <br /> They're often given as a gesture of appreciation and to convey deep feelings.",
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-indigo-500 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Parallax Background Layer */}
@@ -169,11 +164,10 @@ const HydrangeaCard = () => {
         <div className="absolute top-16 right-4 bg-white/95 backdrop-blur-xl rounded-2xl p-4 shadow-xl max-w-xs animate-bounce z-10">
           <div className="text-center">
             <div className="text-2xl mb-2">🎁</div>
-            <p className="text-sm text-gray-700 font-medium">
-              "You found the secret! 🌟
-              <br />
-              This means you're as curious and wonderful as I hoped you'd be 💫"
-            </p>
+            <p
+              className="text-sm text-gray-700 font-medium"
+              dangerouslySetInnerHTML={{ __html: message.secret }}
+            />
             <button
               className="mt-2 text-xs text-purple-600 underline"
               onClick={() => setShowSecret(false)}
@@ -264,11 +258,8 @@ const HydrangeaCard = () => {
           className={`text-gray-700 mb-8 leading-relaxed text-lg transition-all duration-2000 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
-        >
-          Hydrangeas symbolize heartfelt emotions, gratitude, and understanding.
-          They're often given as a gesture of appreciation and to convey deep
-          feelings.
-        </p>
+          dangerouslySetInnerHTML={{ __html: message.meaning }}
+        />
 
         {/* Enhanced Spotify Embed with Vinyl Record Effect */}
         <div
