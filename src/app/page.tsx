@@ -166,7 +166,7 @@ const HydrangeaCard = () => {
 
       {/* Secret Message Popup */}
       {showSecret && (
-        <div className="absolute top-16 right-4 bg-white/95 backdrop-blur-xl rounded-2xl p-4 shadow-xl max-w-xs animate-bounce">
+        <div className="absolute top-16 right-4 bg-white/95 backdrop-blur-xl rounded-2xl p-4 shadow-xl max-w-xs animate-bounce z-10">
           <div className="text-center">
             <div className="text-2xl mb-2">🎁</div>
             <p className="text-sm text-gray-700 font-medium">
