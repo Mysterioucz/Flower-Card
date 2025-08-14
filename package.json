@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "host": "next dev --hostname 172.20.10.4 -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
