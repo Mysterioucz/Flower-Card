@@ -123,6 +123,7 @@ const HydrangeaCard = () => {
   const message = {
     secret: "You found the secret! 🌟 <br /> This means you're as curious and wonderful as I hoped you'd be 💫",
     meaning: "Hydrangeas symbolize heartfelt emotions, gratitude, and understanding. <br /> They're often given as a gesture of appreciation and to convey deep feelings.",
+    footer: "Every flower blooms in its own time, just like every feeling finds its moment to be shared. 💜"
   }
 
   return (
@@ -398,8 +399,7 @@ const HydrangeaCard = () => {
               : "opacity-0 translate-y-4"
           }`}
         >
-          "Every flower blooms in its own time, just like every feeling finds
-          its moment to be shared." 💜
+          {message.footer}
         </p>
       </div>
 
