@@ -117,7 +117,7 @@ const HydrangeaCard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-indigo-500 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="gap-4 min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-indigo-500 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Parallax Background Layer */}
       <div
         className="absolute inset-0 opacity-20"

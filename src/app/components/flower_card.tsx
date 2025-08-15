@@ -80,11 +80,6 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
       >
-        {/* Vinyl Record Animation */}
-        <div className="absolute -top-2 -left-2 w-8 h-8 bg-black rounded-full opacity-0 group-hover:opacity-20 group-hover:animate-spin transition-opacity duration-300 z-10">
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full"></div>
-        </div>
-
         <iframe
           src="https://open.spotify.com/embed/track/2yCyYz6JQdJRjGFQjrUJTy?utm_source=generator"
           width="100%"
@@ -93,11 +88,6 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
         />
-
-        {/* Music Notes Animation */}
-        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="text-white text-sm animate-bounce">🎵</div>
-        </div>
       </div>
 
       {/* Enhanced Action Buttons with Ripple Effect */}
