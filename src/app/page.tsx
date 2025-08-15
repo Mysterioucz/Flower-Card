@@ -203,6 +203,7 @@ const HydrangeaCard = () => {
 
       {/* Main Card with Enhanced Effects */}
       <FlowerCard
+        flowerName="Hydrangea"
         message={message}
         isVisible={isVisible}
         handleLike={handleLike}

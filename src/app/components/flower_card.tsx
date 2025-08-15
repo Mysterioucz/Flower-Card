@@ -10,9 +10,11 @@ interface FlowerCardProps {
   createSparkle: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   liked: boolean;
   showMessage: boolean;
+  flowerName: string;
 }
 
 const FlowerCard: React.FC<FlowerCardProps> = ({
+  flowerName,
   message,
   isVisible,
   handleLike,
@@ -54,7 +56,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
           textShadow: "0 0 20px rgba(147, 51, 234, 0.3)",
         }}
       >
-        Hydrangea
+        {flowerName}
         <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full opacity-60"></div>
       </h1>
 
