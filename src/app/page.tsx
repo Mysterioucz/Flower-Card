@@ -22,7 +22,6 @@ const HydrangeaCard = () => {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [liked, setLiked] = useState(false);
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
-  const [currentTime, setCurrentTime] = useState("");
   const [showSecret, setShowSecret] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -47,14 +46,6 @@ const HydrangeaCard = () => {
     }));
     setParticles(newParticles);
 
-    // Update time every second
-    const timeInterval = setInterval(() => {
-      const now = new Date();
-      setCurrentTime(
-        now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-      );
-    }, 1000);
-
     // Mouse tracking for parallax effect
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
@@ -66,7 +57,6 @@ const HydrangeaCard = () => {
     window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      clearInterval(timeInterval);
       window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
@@ -94,7 +84,7 @@ const HydrangeaCard = () => {
       }
     } else {
       // Fallback for browsers that don't support Web Share API
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(window.location.toString());
       alert("Link copied to clipboard!");
     }
   };
@@ -145,7 +135,7 @@ const HydrangeaCard = () => {
 
       {/* Secret Easter Egg */}
       <div
-        className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center"
+        className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center z-1"
         onClick={handleSecretClick}
         title="Click for a surprise 🎁"
       >
@@ -154,7 +144,7 @@ const HydrangeaCard = () => {
 
       {/* Secret Message Popup */}
       {showSecret && (
-        <div className="absolute top-16 right-4 bg-white/95 backdrop-blur-xl rounded-2xl p-4 shadow-xl max-w-xs animate-bounce z-10">
+        <div className="absolute top-16 right-4 bg-white/95 backdrop-blur-xl rounded-2xl p-4 shadow-xl max-w-xs z-5">
           <div className="text-center">
             <div className="text-2xl mb-2">🎁</div>
             <p
@@ -182,7 +172,6 @@ const HydrangeaCard = () => {
             left: `${particle.left}%`,
             top: `${particle.top}%`,
             animationDelay: `${particle.delay}s`,
-            animationDuration: `${4 + Math.random() * 4}s`,
             animationIterationCount: "infinite",
           }}
         />
