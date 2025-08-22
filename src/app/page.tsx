@@ -16,7 +16,7 @@ interface Sparkle {
   y: number;
 }
 
-const HydrangeaCard = () => {
+const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
@@ -118,20 +118,6 @@ const HydrangeaCard = () => {
 
   return (
     <div className="gap-4 min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-indigo-500 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Parallax Background Layer */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          transform: `translate(${mousePosition.x * 0.05}px, ${
-            mousePosition.y * 0.05
-          }px)`,
-          transition: "transform 0.1s ease-out",
-        }}
-      >
-        <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
-        <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-300/20 rounded-full blur-2xl"></div>
-        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-purple-400/15 rounded-full blur-lg"></div>
-      </div>
 
       {/* Secret Easter Egg */}
       <div
@@ -225,4 +211,4 @@ const HydrangeaCard = () => {
   );
 };
 
-export default HydrangeaCard;
+export default Page;
