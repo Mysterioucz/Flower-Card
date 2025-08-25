@@ -33,7 +33,102 @@ const Page = () => {
   const [displayFlowerId, setDisplayFlowerId] = useState<number>(
     flowers.length - 1
   );
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [translateX, setTranslateX] = useState(0);
 
+  // Handle touch/mouse start
+  const handleStart = (clientX: number) => {
+    setIsDragging(true);
+    setStartX(clientX);
+  };
+
+  // Handle touch/mouse move
+  const handleMove = (clientX: number) => {
+    if (!isDragging) return;
+
+    const deltaX = clientX - startX;
+    setTranslateX(deltaX);
+  };
+
+  // Handle touch/mouse end
+  const handleEnd = () => {
+    if (!isDragging) return;
+
+    setIsDragging(false);
+    const threshold = 100; // Minimum swipe distance
+
+    if (Math.abs(translateX) > threshold) {
+      if (translateX > 0 && currentFlowerId > 0) {
+        // Swipe right - go to previous card
+        console.log("Swiped right");
+        setCurrentFlowerId((prev) => prev - 1);
+      } else if (translateX < 0 && currentFlowerId < flowers.length - 1) {
+        // Swipe left - go to next card
+        console.log("Swiped left");
+        setCurrentFlowerId((prev) => prev + 1);
+      }
+    }
+
+    setTranslateX(0);
+  };
+
+  // Mouse events
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+    handleStart(e.clientX);
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+    handleMove(e.clientX);
+  const handleMouseUp = () => handleEnd();
+
+  // Touch events
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) =>
+    handleStart(e.touches[0].clientX);
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) =>
+    handleMove(e.touches[0].clientX);
+  const handleTouchEnd = () => handleEnd();
+
+  // Navigation functions
+  const goToNext = () => {
+    if (currentFlowerId < flowers.length - 1) {
+      setCurrentFlowerId((prev) => prev + 1);
+    }
+  };
+
+  const goToPrev = () => {
+    if (currentFlowerId > 0) {
+      setCurrentFlowerId((prev) => prev - 1);
+    }
+  };
+
+  const goToCard = (flowerId: number) => {
+    setCurrentFlowerId(flowerId);
+  };
+
+  // Add global mouse event listeners
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        e.preventDefault();
+        handleMove(e.clientX);
+      }
+    };
+
+    const handleGlobalMouseUp = () => {
+      if (isDragging) {
+        handleEnd();
+      }
+    };
+
+    if (isDragging) {
+      document.addEventListener("mousemove", handleGlobalMouseMove);
+      document.addEventListener("mouseup", handleGlobalMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleGlobalMouseMove);
+      document.removeEventListener("mouseup", handleGlobalMouseUp);
+    };
+  }, [isDragging, startX, translateX]);
   // Watch for currentFlowerId changes and handle transitions
   useEffect(() => {
     if (currentFlowerId !== displayFlowerId) {
@@ -129,14 +224,20 @@ const Page = () => {
   return (
     <div
       className={`gap-4 min-h-screen ${flowers[displayFlowerId].color.backgroundColor} transition-colors duration-500 flex items-center justify-center p-4 relative overflow-hidden`}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
-      {/* Add navigation buttons for testing */}
+      {/* Navigation buttons  */}
       <div className="absolute top-4 left-4 flex gap-2 z-10">
         {flowers.map((_, index) => (
           <button
             key={index}
             onClick={() => changeFlower(index)}
-            className={`w-8 h-8 rounded-full border-2 border-white/50 transition-all duration-200 ${
+            className={`w-8 h-8 text-gray-400 rounded-full border-2 border-white/50 transition-all duration-200 ${
               displayFlowerId === index
                 ? "bg-white/80 scale-110"
                 : "bg-white/30 hover:bg-white/50"
