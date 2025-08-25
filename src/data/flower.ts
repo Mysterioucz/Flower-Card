@@ -5,12 +5,17 @@ export interface FlowerColor {
   cardColor?: string;
   progressBarColor?: string;
 }
+
 export interface Flower {
   id: number;
   name: string;
   imgPath: string;
   meaning: string;
   color: FlowerColor;
+  spotify: {
+    url: string;
+    color: string;
+  }
 }
 
 export const flowerColors: Record<string, FlowerColor> = {
@@ -68,6 +73,10 @@ export const flowers: Flower[] = [
     meaning:
       "Hydrangeas symbolize heartfelt emotions, gratitude, and understanding. They're often given as a gesture of appreciation and to convey deep feelings.",
     color: flowerColors["Hydrangea"],
+    spotify: {
+      url: "https://open.spotify.com/embed/track/2yCyYz6JQdJRjGFQjrUJTy?utm_source=generator",
+      color: "oklch(59.6% 0.145 163.225)",
+    },
   },
   {
     id: 2,
@@ -76,6 +85,10 @@ export const flowers: Flower[] = [
     meaning:
       "Known as the “return of happiness,” it represents purity, sweetness, and tender love. Giving it is like saying: “You bring light and happiness into my world. My heart feels peaceful and complete when you’re around.”",
     color: flowerColors["Lily of the Valley"],
+    spotify: {
+      url: "https://open.spotify.com/embed/track/5YZR3UQJQ8OLWYjhieJ6hn?utm_source=generator&theme=0",
+      color: "#50C878",
+    },
   },
 ];
 

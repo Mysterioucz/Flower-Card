@@ -138,10 +138,10 @@ const Page = () => {
 
       // After fade out completes, update display and fade in
       setTimeout(() => {
-        setIsVisible(true);
-        setTimeout(() => setShowMessage(true), 500);
-        setIsTransitioning(false);
         setDisplayFlowerId(currentFlowerId);
+        setTimeout(() => setShowMessage(true), 500);
+        setIsVisible(true);
+        setIsTransitioning(false);
       }, 1000); // Adjust timing to match your CSS transition
     }
   }, [currentFlowerId, displayFlowerId]);

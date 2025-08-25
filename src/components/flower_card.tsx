@@ -1,4 +1,5 @@
 import { Flower } from "@/data/flower";
+import { Dancing_Script } from "next/font/google";
 import Image from "next/image";
 interface FlowerCardProps {
   isVisible: boolean;
@@ -10,6 +11,8 @@ interface FlowerCardProps {
   flower: Flower;
   footerMessage: string;
 }
+
+const dancingScript = Dancing_Script({ subsets: ["latin"], weight: "700" });
 
 const FlowerCard: React.FC<FlowerCardProps> = ({
   flower,
@@ -23,7 +26,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
 }) => {
   return (
     <div
-      className={`max-w-md w-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl rounded-3xl p-8 text-center transition-all duration-1000 hover:shadow-3xl hover:-translate-y-2 cursor-pointer relative overflow-hidden group ${
+      className={`max-w-sm md:max-w-md h-fit w-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl rounded-3xl p-8 text-center transition-all duration-1000 hover:shadow-3xl hover:-translate-y-2 cursor-pointer relative overflow-hidden group ${
         isVisible
           ? "opacity-100 translate-y-0 scale-100"
           : "opacity-0 translate-y-8 scale-95"
@@ -49,15 +52,13 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
 
       {/* Enhanced Title with Text Shadow */}
       <h1
-        className={`text-5xl font-bold mb-6 ${
+        className={`text-4xl md:text-5xl font-bold mb-6 text-shadow-[0_0_20px_rgba(147,51,234,0.3)] ${
+          dancingScript.className
+        } ${
           flower.color.textColor
         } bg-clip-text text-transparent transition-all duration-1500 hover:scale-105 relative z-10 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
-        style={{
-          fontFamily: '"Dancing Script", cursive',
-          textShadow: "0 0 20px rgba(147, 51, 234, 0.3)",
-        }}
       >
         {flower.name}
       </h1>
@@ -87,12 +88,12 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
         }`}
       >
         <iframe
-          src="https://open.spotify.com/embed/track/2yCyYz6JQdJRjGFQjrUJTy?utm_source=generator"
+          src={flower.spotify.url}
           width="100%"
           height="152"
-          frameBorder="0"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
+          style={flower.spotify.color ? { background: 'green' } : {}}
         />
       </div>
 
