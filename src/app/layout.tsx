@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hydrangea Flower",
+  title: "Flower for you punpun",
   description: "Made by @Mysterioucz",
 };
 

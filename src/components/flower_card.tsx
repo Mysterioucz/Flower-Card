@@ -1,27 +1,25 @@
+import { Flower } from "@/data/flower";
+import Image from "next/image";
 interface FlowerCardProps {
-  message: {
-    meaning: string;
-    footer: string;
-    secret: string;
-  };
   isVisible: boolean;
   handleLike: () => void;
   handleShare: () => void;
   createSparkle: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   liked: boolean;
   showMessage: boolean;
-  flowerName: string;
+  flower: Flower;
+  footerMessage: string;
 }
 
 const FlowerCard: React.FC<FlowerCardProps> = ({
-  flowerName,
-  message,
+  flower,
   isVisible,
   handleLike,
   handleShare,
   createSparkle,
   liked,
   showMessage,
+  footerMessage
 }) => {
   return (
     <div
@@ -41,8 +39,13 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
       </div>
 
       {/* Flower Icon with Breathing Animation */}
-      <div className="text-6xl mb-6 animate-pulse hover:scale-110 transition-transform duration-300 relative z-10">
-        🌸
+      <div className="flex text-6xl mb-6 animate-pulse hover:scale-110 transition-transform duration-300 relative z-10 justify-center">
+        <Image
+          src={flower.imgPath}
+          alt={flower.name}
+          width={60}
+          height={60}
+        />
       </div>
 
       {/* Enhanced Title with Text Shadow */}
@@ -55,7 +58,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
           textShadow: "0 0 20px rgba(147, 51, 234, 0.3)",
         }}
       >
-        {flowerName}
+        {flower.name}
       </h1>
 
       {/* Progress Bar for Reading */}
@@ -71,7 +74,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
         className={`text-gray-700 mb-8 leading-relaxed text-lg transition-all duration-2000 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
-        dangerouslySetInnerHTML={{ __html: message.meaning }}
+        dangerouslySetInnerHTML={{ __html: flower.meaning }}
       />
 
       {/* Enhanced Spotify Embed with Vinyl Record Effect */}
@@ -149,7 +152,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
           showMessage ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
       >
-        {message.footer}
+        {footerMessage}
       </p>
     </div>
   );

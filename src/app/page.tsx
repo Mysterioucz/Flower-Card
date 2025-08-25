@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import FlowerCard from "@components/flower_card";
+import { flowers, footerMessage } from "@/data/flower";
 
 interface Particle {
   id: number;
@@ -24,6 +25,7 @@ const Page = () => {
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
   const [showSecret, setShowSecret] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [currentFlowerId, setCurrentFlowerId] = useState<number>(flowers.length - 1);
 
   useEffect(() => {
     // Trigger animations on mount
@@ -46,19 +48,6 @@ const Page = () => {
     }));
     setParticles(newParticles);
 
-    // Mouse tracking for parallax effect
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
   }, []);
 
   const handleLike = () => {
@@ -107,14 +96,6 @@ const Page = () => {
     }, 1000);
   };
 
-  const message = {
-    secret:
-      "You found the secret! 🌟 <br /> พี่ขอบคุณจริงๆ การมีเราเข้ามาในชีวิตพี่ทำให้พี่ Happy มากๆ",
-    meaning:
-      "Hydrangeas symbolize heartfelt emotions, gratitude, and understanding. <br /> They're often given as a gesture of appreciation and to convey deep feelings.",
-    footer:
-      "Every flower blooms in its own time, just like every feeling finds its moment to be shared.",
-  };
 
   return (
     <div className="gap-4 min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-indigo-500 flex items-center justify-center p-4 relative overflow-hidden">
@@ -135,7 +116,7 @@ const Page = () => {
             <div className="text-2xl mb-2">🎁</div>
             <p
               className="text-sm text-gray-700 font-medium"
-              dangerouslySetInnerHTML={{ __html: message.secret }}
+              dangerouslySetInnerHTML={{ __html: flowers[currentFlowerId].meaning }}
             />
             <button
               className="mt-2 text-xs text-purple-600 underline"
@@ -178,14 +159,14 @@ const Page = () => {
 
       {/* Main Card with Enhanced Effects */}
       <FlowerCard
-        flowerName="Hydrangea"
-        message={message}
+        flower={flowers[currentFlowerId]}
         isVisible={isVisible}
         handleLike={handleLike}
         handleShare={handleShare}
         createSparkle={createSparkle}
         liked={liked}
         showMessage={showMessage}
+        footerMessage={footerMessage}
       />
 
       {/* Floating Hearts Animation */}
