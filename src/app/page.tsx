@@ -24,102 +24,32 @@ const Page = () => {
   const [liked, setLiked] = useState(false);
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
   const [showSecret, setShowSecret] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [currentFlowerId, setCurrentFlowerId] = useState<number>(
     flowers.length - 1
   );
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [translateX, setTranslateX] = useState(0);
 
-  // Handle touch/mouse start
-  const handleStart = (clientX: number) => {
-    setIsDragging(true);
-    setStartX(clientX);
-  };
+  // New states for transition animation
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [displayFlowerId, setDisplayFlowerId] = useState<number>(
+    flowers.length - 1
+  );
 
-  // Handle touch/mouse move
-  const handleMove = (clientX: number) => {
-    if (!isDragging) return;
-
-    const deltaX = clientX - startX;
-    setTranslateX(deltaX);
-  };
-
-  // Handle touch/mouse end
-  const handleEnd = () => {
-    if (!isDragging) return;
-
-    setIsDragging(false);
-    const threshold = 100; // Minimum swipe distance
-
-    if (Math.abs(translateX) > threshold) {
-      if (translateX > 0 && currentFlowerId > 0) {
-        // Swipe right - go to previous card
-        console.log("Swiped right");
-        setCurrentFlowerId((prev) => prev - 1);
-      } else if (translateX < 0 && currentFlowerId < flowers.length - 1) {
-        // Swipe left - go to next card
-        console.log("Swiped left");
-        setCurrentFlowerId((prev) => prev + 1);
-      }
-    }
-
-    setTranslateX(0);
-  };
-
-  // Mouse events
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => handleStart(e.clientX);
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => handleMove(e.clientX);
-  const handleMouseUp = () => handleEnd();
-
-  // Touch events
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => handleStart(e.touches[0].clientX);
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => handleMove(e.touches[0].clientX);
-  const handleTouchEnd = () => handleEnd();
-
-  // Navigation functions
-  const goToNext = () => {
-    if (currentFlowerId < flowers.length - 1) {
-      setCurrentFlowerId((prev) => prev + 1);
-    }
-  };
-
-  const goToPrev = () => {
-    if (currentFlowerId > 0) {
-      setCurrentFlowerId((prev) => prev - 1);
-    }
-  };
-
-  const goToCard = (flowerId: number) => {
-    setCurrentFlowerId(flowerId);
-  };
-
-  // Add global mouse event listeners
+  // Watch for currentFlowerId changes and handle transitions
   useEffect(() => {
-    const handleGlobalMouseMove = (e: MouseEvent) => {
-      if (isDragging) {
-        e.preventDefault();
-        handleMove(e.clientX);
-      }
-    };
+    if (currentFlowerId !== displayFlowerId) {
+      setIsTransitioning(true);
+      setIsVisible(false);
+      setShowMessage(false);
 
-    const handleGlobalMouseUp = () => {
-      if (isDragging) {
-        handleEnd();
-      }
-    };
-
-    if (isDragging) {
-      document.addEventListener("mousemove", handleGlobalMouseMove);
-      document.addEventListener("mouseup", handleGlobalMouseUp);
+      // After fade out completes, update display and fade in
+      setTimeout(() => {
+        setIsVisible(true);
+        setTimeout(() => setShowMessage(true), 500);
+        setIsTransitioning(false);
+        setDisplayFlowerId(currentFlowerId);
+      }, 1000); // Adjust timing to match your CSS transition
     }
-
-    return () => {
-      document.removeEventListener("mousemove", handleGlobalMouseMove);
-      document.removeEventListener("mouseup", handleGlobalMouseUp);
-    };
-  }, [isDragging, startX, translateX]);
+  }, [currentFlowerId, displayFlowerId]);
 
   useEffect(() => {
     // Trigger animations on mount
@@ -142,6 +72,13 @@ const Page = () => {
     }));
     setParticles(newParticles);
   }, []);
+
+  // Function to change flower with animation
+  const changeFlower = (newFlowerId: number) => {
+    if (newFlowerId !== currentFlowerId && !isTransitioning) {
+      setCurrentFlowerId(newFlowerId);
+    }
+  };
 
   const handleLike = () => {
     setLiked(!liked);
@@ -191,12 +128,25 @@ const Page = () => {
 
   return (
     <div
-      className={`gap-4 min-h-screen ${flowers[currentFlowerId].color.backgroundColor} flex items-center justify-center p-4 relative overflow-hidden`}
-      onMouseDown={handleMouseDown}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      className={`gap-4 min-h-screen ${flowers[displayFlowerId].color.backgroundColor} transition-colors duration-500 flex items-center justify-center p-4 relative overflow-hidden`}
     >
+      {/* Add navigation buttons for testing */}
+      <div className="absolute top-4 left-4 flex gap-2 z-10">
+        {flowers.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => changeFlower(index)}
+            className={`w-8 h-8 rounded-full border-2 border-white/50 transition-all duration-200 ${
+              displayFlowerId === index
+                ? "bg-white/80 scale-110"
+                : "bg-white/30 hover:bg-white/50"
+            } ${isTransitioning ? "pointer-events-none opacity-50" : ""}`}
+            disabled={isTransitioning}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
       {/* Secret Easter Egg */}
       <div
         className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center z-1"
@@ -214,7 +164,7 @@ const Page = () => {
             <p
               className="text-sm text-gray-700 font-medium"
               dangerouslySetInnerHTML={{
-                __html: flowers[currentFlowerId].meaning,
+                __html: flowers[displayFlowerId].meaning,
               }}
             />
             <button
@@ -258,7 +208,7 @@ const Page = () => {
 
       {/* Main Card with Enhanced Effects */}
       <FlowerCard
-        flower={flowers[currentFlowerId]}
+        flower={flowers[displayFlowerId]}
         isVisible={isVisible}
         handleLike={handleLike}
         handleShare={handleShare}

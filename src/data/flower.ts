@@ -24,7 +24,7 @@ export const flowerColors: Record<string, FlowerColor> = {
   },
   "Lily of the Valley": {
     backgroundColor:
-      "bg-gradient-to-r from-emerald-200 via-green-300 to-emerald-500",
+      "bg-gradient-to-br from-emerald-200 via-green-300 to-emerald-500",
     textColor:
       "bg-gradient-to-r from-emerald-600 via-green-700 to-emerald-900 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]",
     gradient: "bg-gradient-to-l from-white via-emerald-200 to-emerald-500",
