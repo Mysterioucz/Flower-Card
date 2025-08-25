@@ -31,7 +31,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
       onClick={createSparkle}
     >
       {/* Card Glow Effect */}
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-pink-400/20 to-purple-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${flower.color.cardColor ?? flower.color.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
 
       {/* Floating Mini Hearts */}
       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -50,7 +50,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
 
       {/* Enhanced Title with Text Shadow */}
       <h1
-        className={`text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-800 bg-clip-text text-transparent transition-all duration-1500 hover:scale-105 relative z-10 ${
+        className={`text-5xl font-bold mb-6 ${flower.color.textColor} bg-clip-text transition-all duration-1500 hover:scale-105 relative z-10 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
         style={{
@@ -64,7 +64,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
       {/* Progress Bar for Reading */}
       <div className="w-full h-1 bg-white/20 rounded-full mb-6 overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-pink-400 to-purple-500 rounded-full transition-all duration-3000 ease-out"
+          className={`h-full ${flower.color.progressBarColor} rounded-full transition-all duration-3000 ease-out`}
           style={{ width: isVisible ? "100%" : "0%" }}
         ></div>
       </div>
@@ -79,7 +79,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
 
       {/* Enhanced Spotify Embed with Vinyl Record Effect */}
       <div
-        className={`mb-6 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition-all duration-2500 relative group ${
+        className={`mb-6 rounded-2xl bg-transparent overflow-hidden shadow-lg hover:scale-105 transition-all duration-2500 relative group ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
       >
@@ -108,8 +108,6 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
           }`}
           title="Like this message"
         >
-          {/* Ripple Effect */}
-          <div className="absolute inset-0 bg-red-400 rounded-full scale-0 group-active:scale-100 opacity-30 transition-transform duration-200"></div>
 
           <svg
             className="w-6 h-6 relative z-10"
@@ -129,7 +127,6 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
           className="relative p-4 rounded-full text-gray-500 hover:text-blue-400 hover:bg-blue-50 transition-all duration-300 hover:scale-110 group overflow-hidden shadow-lg hover:shadow-blue-200"
           title="Share this beautiful message"
         >
-          <div className="absolute inset-0 bg-blue-400 rounded-full scale-0 group-active:scale-100 opacity-30 transition-transform duration-200"></div>
           <svg
             className="w-6 h-6 relative z-10"
             fill="none"

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import FlowerCard from "@components/flower_card";
-import { flowers, footerMessage } from "@/data/flower";
+import { Flower, flowers, footerMessage } from "@/data/flower";
 
 interface Particle {
   id: number;
@@ -26,6 +26,7 @@ const Page = () => {
   const [showSecret, setShowSecret] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [currentFlowerId, setCurrentFlowerId] = useState<number>(flowers.length - 1);
+  const [flower, setFlower] = useState<Flower>(flowers[currentFlowerId]);
 
   useEffect(() => {
     // Trigger animations on mount
@@ -98,7 +99,7 @@ const Page = () => {
 
 
   return (
-    <div className="gap-4 min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-indigo-500 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className={`gap-4 min-h-screen bg-gradient-to-br ${flower.color.mainColor} flex items-center justify-center p-4 relative overflow-hidden`}>
 
       {/* Secret Easter Egg */}
       <div
