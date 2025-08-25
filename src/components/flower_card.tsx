@@ -19,7 +19,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
   createSparkle,
   liked,
   showMessage,
-  footerMessage
+  footerMessage,
 }) => {
   return (
     <div
@@ -31,7 +31,11 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
       onClick={createSparkle}
     >
       {/* Card Glow Effect */}
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${flower.color.cardColor ?? flower.color.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+      <div
+        className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${
+          flower.color.cardColor ?? flower.color.gradient
+        } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+      ></div>
 
       {/* Floating Mini Hearts */}
       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -40,17 +44,14 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
 
       {/* Flower Icon with Breathing Animation */}
       <div className="flex text-6xl mb-6 animate-pulse hover:scale-110 transition-transform duration-300 relative z-10 justify-center">
-        <Image
-          src={flower.imgPath}
-          alt={flower.name}
-          width={60}
-          height={60}
-        />
+        <Image src={flower.imgPath} alt={flower.name} width={60} height={60} />
       </div>
 
       {/* Enhanced Title with Text Shadow */}
       <h1
-        className={`text-5xl font-bold mb-6 ${flower.color.textColor} bg-clip-text transition-all duration-1500 hover:scale-105 relative z-10 ${
+        className={`text-5xl font-bold mb-6 ${
+          flower.color.textColor
+        } bg-clip-text text-transparent transition-all duration-1500 hover:scale-105 relative z-10 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
         style={{
@@ -64,7 +65,9 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
       {/* Progress Bar for Reading */}
       <div className="w-full h-1 bg-white/20 rounded-full mb-6 overflow-hidden">
         <div
-          className={`h-full ${flower.color.progressBarColor} rounded-full transition-all duration-3000 ease-out`}
+          className={`h-full ${
+            flower.color.progressBarColor ?? flower.color.gradient
+          } rounded-full transition-all duration-3000 ease-out`}
           style={{ width: isVisible ? "100%" : "0%" }}
         ></div>
       </div>
@@ -108,7 +111,6 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
           }`}
           title="Like this message"
         >
-
           <svg
             className="w-6 h-6 relative z-10"
             fill="currentColor"

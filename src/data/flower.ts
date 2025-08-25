@@ -1,5 +1,5 @@
 export interface FlowerColor {
-  mainColor: string;
+  backgroundColor: string;
   textColor: string;
   gradient: string;
   cardColor?: string;
@@ -15,12 +15,16 @@ export interface Flower {
 
 export const flowerColors: Record<string, FlowerColor> = {
   Hydrangea: {
-    mainColor: "bg-gradient-to-r from-purple-400 via-pink-300 to-indigo-500",
-    textColor: "text-indigo-800",
+    backgroundColor:
+      "bg-gradient-to-br from-purple-400 via-pink-300 to-indigo-500",
+    textColor: "bg-gradient-to-r from-purple-600 via-pink-600 to-purple-800",
     gradient: "bg-gradient-to-r from-blue-300 to-indigo-500",
+    cardColor: "bg-gradient-to-r from-pink-400/20 to-purple-400/20",
+    progressBarColor: "bg-gradient-to-r from-pink-400 to-purple-500",
   },
   "Lily of the Valley": {
-    mainColor: "bg-gradient-to-r from-emerald-200 via-green-300 to-emerald-500",
+    backgroundColor:
+      "bg-gradient-to-r from-emerald-200 via-green-300 to-emerald-500",
     textColor:
       "bg-gradient-to-r from-emerald-600 via-green-700 to-emerald-900 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]",
     gradient: "bg-gradient-to-l from-white via-emerald-200 to-emerald-500",
@@ -28,27 +32,29 @@ export const flowerColors: Record<string, FlowerColor> = {
     progressBarColor: "bg-emerald-100",
   },
   "Peach Blossom": {
-    mainColor: "bg-gradient-to-r from-pink-200 via-rose-300 to-pink-500",
+    backgroundColor: "bg-gradient-to-r from-pink-200 via-rose-300 to-pink-500",
     textColor: "text-pink-700",
     gradient: "bg-gradient-to-r from-pink-300 to-rose-500",
   },
   Freesia: {
-    mainColor: "bg-gradient-to-r from-yellow-200 via-amber-300 to-yellow-500",
+    backgroundColor:
+      "bg-gradient-to-r from-yellow-200 via-amber-300 to-yellow-500",
     textColor: "text-yellow-700",
     gradient: "bg-gradient-to-r from-amber-300 to-yellow-600",
   },
   Lotus: {
-    mainColor: "bg-gradient-to-r from-rose-200 via-pink-300 to-rose-500",
+    backgroundColor: "bg-gradient-to-r from-rose-200 via-pink-300 to-rose-500",
     textColor: "text-rose-800",
     gradient: "bg-gradient-to-r from-pink-300 to-rose-600",
   },
   Kapok: {
-    mainColor: "bg-gradient-to-r from-orange-200 via-amber-300 to-orange-500",
+    backgroundColor:
+      "bg-gradient-to-r from-orange-200 via-amber-300 to-orange-500",
     textColor: "text-orange-800",
     gradient: "bg-gradient-to-r from-amber-300 to-orange-600",
   },
   Peony: {
-    mainColor: "bg-gradient-to-r from-rose-300 via-pink-400 to-rose-600",
+    backgroundColor: "bg-gradient-to-r from-rose-300 via-pink-400 to-rose-600",
     textColor: "text-rose-900",
     gradient: "bg-gradient-to-r from-rose-400 to-pink-600",
   },
