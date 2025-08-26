@@ -1,6 +1,8 @@
 import { Flower } from "@/data/flower";
 import { Dancing_Script } from "next/font/google";
 import Image from "next/image";
+import { useEffect, useCallback } from "react";
+
 interface FlowerCardProps {
   isVisible: boolean;
   handleLike: () => void;
@@ -10,6 +12,7 @@ interface FlowerCardProps {
   showMessage: boolean;
   flower: Flower;
   footerMessage: string;
+  onSpotifyLoaded?: () => void;
 }
 
 const dancingScript = Dancing_Script({ subsets: ["latin"], weight: "700" });
@@ -23,7 +26,16 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
   liked,
   showMessage,
   footerMessage,
+  onSpotifyLoaded,
 }) => {
+  const handleIframeLoad = useCallback(() => {
+    // Add a small delay to ensure Spotify embed content is fully loaded
+    onSpotifyLoaded?.();
+  }, [onSpotifyLoaded]);
+
+  // Reset iframe when flower changes by adding key prop
+  const iframeKey = `spotify-${flower.id}`;
+
   return (
     <div
       className={`max-w-sm md:max-w-md h-fit w-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl rounded-3xl p-8 text-center transition-all duration-1000 hover:shadow-3xl hover:-translate-y-2 cursor-pointer relative overflow-hidden group ${
@@ -83,17 +95,19 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
 
       {/* Enhanced Spotify Embed with Vinyl Record Effect */}
       <div
-        className={`mb-6 rounded-2xl bg-transparent overflow-hidden shadow-lg hover:scale-105 transition-all duration-2500 relative group ${
+        className={`mb-6 rounded-2xl bg-transparent overflow-hidden shadow-lg hover:scale-105 transition-all duration-1000 relative group ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
       >
         <iframe
+          key={iframeKey}
           src={flower.spotify.url}
           width="100%"
           height="152"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
-          style={flower.spotify.color ? { background: 'green' } : {}}
+          onLoad={handleIframeLoad}
+          style={flower.spotify.color ? { background: "green" } : {}}
         />
       </div>
 
