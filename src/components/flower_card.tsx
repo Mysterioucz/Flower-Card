@@ -1,7 +1,7 @@
 import { Flower } from "@/data/flower";
 import { Dancing_Script } from "next/font/google";
 import Image from "next/image";
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 
 interface FlowerCardProps {
   isVisible: boolean;
@@ -9,7 +9,6 @@ interface FlowerCardProps {
   handleShare: () => void;
   createSparkle: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   liked: boolean;
-  showMessage: boolean;
   flower: Flower;
   footerMessage: string;
   onSpotifyLoaded?: () => void;
@@ -24,12 +23,10 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
   handleShare,
   createSparkle,
   liked,
-  showMessage,
   footerMessage,
   onSpotifyLoaded,
 }) => {
   const handleIframeLoad = useCallback(() => {
-    // Add a small delay to ensure Spotify embed content is fully loaded
     onSpotifyLoaded?.();
   }, [onSpotifyLoaded]);
 
@@ -38,7 +35,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
 
   return (
     <div
-      className={`max-w-sm md:max-w-md h-fit w-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl rounded-3xl p-8 text-center transition-all duration-1000 hover:shadow-3xl hover:-translate-y-2 cursor-pointer relative overflow-hidden group ${
+      className={`max-w-sm md:max-w-md w-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl rounded-3xl p-8 text-center transition-fade duration-500 hover:shadow-3xl hover:-translate-y-2 cursor-pointer relative overflow-hidden group ${
         isVisible
           ? "opacity-100 translate-y-0 scale-100"
           : "opacity-0 translate-y-8 scale-95"
@@ -87,7 +84,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
 
       {/* Meaning Text */}
       <p
-        className={`text-gray-700 mb-8 leading-relaxed text-lg transition-all duration-2000 ${
+        className={`text-gray-700 mb-8 leading-relaxed text-lg transition-all duration-1000 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
         dangerouslySetInnerHTML={{ __html: flower.meaning }}
@@ -113,9 +110,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
 
       {/* Enhanced Action Buttons with Ripple Effect */}
       <div
-        className={`flex justify-center space-x-6 mb-6 transition-all duration-1000 ${
-          showMessage ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-        }`}
+        className={`flex justify-center space-x-6 mb-6`}
       >
         <button
           onClick={handleLike}
@@ -162,9 +157,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
 
       {/* Personal Message */}
       <p
-        className={`text-gray-600 italic text-sm transition-all duration-1500 ${
-          showMessage ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-        }`}
+        className={`text-gray-600 italic text-sm`}
       >
         {footerMessage}
       </p>

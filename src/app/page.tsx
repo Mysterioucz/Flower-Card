@@ -20,7 +20,6 @@ interface Sparkle {
 
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [showMessage, setShowMessage] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [liked, setLiked] = useState(false);
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
@@ -33,7 +32,6 @@ const Page = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [translateX, setTranslateX] = useState(0);
-  const [spotifyLoaded, setSpotifyLoaded] = useState(false);
 
   // Handle touch/mouse start
   const handleStart = (clientX: number) => {
@@ -115,23 +113,19 @@ const Page = () => {
     if (currentFlowerId !== displayFlowerId) {
       setIsTransitioning(true);
       setIsVisible(false);
-      setShowMessage(false);
-      setSpotifyLoaded(false); // Reset Spotify loaded state
 
       // After fade out completes, update display
       setTimeout(() => {
         setDisplayFlowerId(currentFlowerId);
         // Don't set isVisible here - wait for Spotify to load
-      }, 1000); // Adjust timing to match your CSS transition
+      }, 400); // Adjust timing to match your CSS transition
     }
   }, [currentFlowerId, displayFlowerId]);
 
   // Handle Spotify iframe load completion
   const handleSpotifyLoaded = () => {
     if (isTransitioning) {
-      setSpotifyLoaded(true);
       setIsVisible(true);
-      setTimeout(() => setShowMessage(true), 500);
       setIsTransitioning(false);
     }
   };
@@ -139,8 +133,6 @@ const Page = () => {
   useEffect(() => {
     // Trigger animations on mount
     setIsVisible(true);
-    setSpotifyLoaded(true); // Set initial state
-    setTimeout(() => setShowMessage(true), 1500);
 
     // Generate floating particles
     const newParticles = Array.from({ length: 12 }, (_, i) => ({
@@ -309,7 +301,6 @@ const Page = () => {
         handleShare={handleShare}
         createSparkle={createSparkle}
         liked={liked}
-        showMessage={showMessage}
         footerMessage={footerMessage}
         onSpotifyLoaded={handleSpotifyLoaded}
       />
