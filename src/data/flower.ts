@@ -15,7 +15,7 @@ export interface Flower {
   spotify: {
     url: string;
     color: string;
-  }
+  };
 }
 
 export const flowerColors: Record<string, FlowerColor> = {
@@ -26,6 +26,16 @@ export const flowerColors: Record<string, FlowerColor> = {
     gradient: "bg-gradient-to-r from-blue-300 to-indigo-500",
     cardColor: "bg-gradient-to-r from-pink-400/20 to-purple-400/20",
     progressBarColor: "bg-gradient-to-r from-pink-400 to-purple-500",
+  },
+  Freesia: {
+    backgroundColor:
+      "bg-gradient-to-br from-yellow-300 via-purple-300 to-freesia-purple",
+    textColor:
+      "bg-gradient-to-r from-purple-600 via-indigo-600 to-violet-800 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]",
+    gradient: "bg-gradient-to-r from-purple-400 via-purple-500 to-indigo-600",
+    cardColor:
+      "bg-gradient-to-r from-purple-200/30 via-purple-300/30 to-indigo-300/30",
+    progressBarColor: "bg-gradient-to-r from-purple-400 to-indigo-500",
   },
   "Lily of the Valley": {
     backgroundColor:
@@ -40,12 +50,6 @@ export const flowerColors: Record<string, FlowerColor> = {
     backgroundColor: "bg-gradient-to-r from-pink-200 via-rose-300 to-pink-500",
     textColor: "text-pink-700",
     gradient: "bg-gradient-to-r from-pink-300 to-rose-500",
-  },
-  Freesia: {
-    backgroundColor:
-      "bg-gradient-to-r from-yellow-200 via-amber-300 to-yellow-500",
-    textColor: "text-yellow-700",
-    gradient: "bg-gradient-to-r from-amber-300 to-yellow-600",
   },
   Lotus: {
     backgroundColor: "bg-gradient-to-r from-rose-200 via-pink-300 to-rose-500",
@@ -75,11 +79,23 @@ export const flowers: Flower[] = [
     color: flowerColors["Hydrangea"],
     spotify: {
       url: "https://open.spotify.com/embed/track/2yCyYz6JQdJRjGFQjrUJTy?utm_source=generator",
-      color: "oklch(59.6% 0.145 163.225)",
+      color: "",
     },
   },
   {
     id: 2,
+    name: "Freesia",
+    imgPath: "/flowers/freesia.png",
+    meaning:
+      "Freesias symbolize sincere affection, pure intentions, and the hope for true love. They represent honesty in expressing feelings, admiration beyond friendship, and the promise of a genuine love that could blossom if given the chance.",
+    color: flowerColors["Freesia"],
+    spotify: {
+      url: "https://open.spotify.com/embed/track/7h5PIF6duiyMMItVXznlJn?utm_source=generator",
+      color: "",
+    },
+  },
+  {
+    id: 3,
     name: "Lily of the Valley",
     imgPath: "/flowers/lily_of_the_valley.png",
     meaning:

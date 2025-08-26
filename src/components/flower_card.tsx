@@ -46,7 +46,7 @@ const FlowerCard: React.FC<FlowerCardProps> = ({
       </div>
 
       {/* Flower Icon with Breathing Animation */}
-      <div className="flex text-6xl mb-6 animate-pulse hover:scale-110 transition-transform duration-300 relative z-10 justify-center">
+      <div className="flex text-6xl animate-pulse hover:scale-110 transition-transform duration-300 relative z-10 justify-center">
         <Image src={flower.imgPath} alt={flower.name} width={60} height={60} />
       </div>
 

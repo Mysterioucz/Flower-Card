@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import FlowerCard from "@components/flower_card";
 import { Flower, flowers, footerMessage } from "@/data/flower";
+import { LAST_FLOWER } from "@/data/helper";
 
 interface Particle {
   id: number;
@@ -25,13 +26,13 @@ const Page = () => {
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
   const [showSecret, setShowSecret] = useState(false);
   const [currentFlowerId, setCurrentFlowerId] = useState<number>(
-    flowers.length - 1
+    LAST_FLOWER
   );
 
   // New states for transition animation
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayFlowerId, setDisplayFlowerId] = useState<number>(
-    flowers.length - 1
+    LAST_FLOWER
   );
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -63,7 +64,7 @@ const Page = () => {
         // Swipe right - go to previous card
         console.log("Swiped right");
         setCurrentFlowerId((prev) => prev - 1);
-      } else if (translateX < 0 && currentFlowerId < flowers.length - 1) {
+      } else if (translateX < 0 && currentFlowerId < LAST_FLOWER) {
         // Swipe left - go to next card
         console.log("Swiped left");
         setCurrentFlowerId((prev) => prev + 1);
@@ -86,23 +87,6 @@ const Page = () => {
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) =>
     handleMove(e.touches[0].clientX);
   const handleTouchEnd = () => handleEnd();
-
-  // Navigation functions
-  const goToNext = () => {
-    if (currentFlowerId < flowers.length - 1) {
-      setCurrentFlowerId((prev) => prev + 1);
-    }
-  };
-
-  const goToPrev = () => {
-    if (currentFlowerId > 0) {
-      setCurrentFlowerId((prev) => prev - 1);
-    }
-  };
-
-  const goToCard = (flowerId: number) => {
-    setCurrentFlowerId(flowerId);
-  };
 
   // Add global mouse event listeners
   useEffect(() => {
@@ -223,7 +207,7 @@ const Page = () => {
 
   return (
     <div
-      className={`gap-4 min-h-screen ${flowers[displayFlowerId].color.backgroundColor} transition-colors duration-500 flex items-center justify-center p-4 relative overflow-hidden`}
+      className={`gap-4 min-h-screen max-h-screen ${flowers[displayFlowerId].color.backgroundColor} transition-colors duration-500 flex items-center justify-center p-4 relative overflow-hidden`}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -233,12 +217,14 @@ const Page = () => {
     >
       {/* Navigation buttons  */}
       <div className="absolute top-4 left-4 flex gap-2 z-10">
-        {flowers.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => changeFlower(index)}
-            className={`w-8 h-8 text-gray-400 rounded-full border-2 border-white/50 transition-all duration-200 ${
-              displayFlowerId === index
+        {flowers.map((_, index) => {
+          if(index > LAST_FLOWER) return null;
+          return (
+            <button
+              key={index}
+              onClick={() => changeFlower(index)}
+              className={`w-8 h-8 text-gray-400 rounded-full border-2 border-white/50 transition-all duration-200 ${
+                displayFlowerId === index
                 ? "bg-white/80 scale-110"
                 : "bg-white/30 hover:bg-white/50"
             } ${isTransitioning ? "pointer-events-none opacity-50" : ""}`}
@@ -246,7 +232,8 @@ const Page = () => {
           >
             {index + 1}
           </button>
-        ))}
+        )
+      })}
       </div>
       {/* Secret Easter Egg */}
       <div
