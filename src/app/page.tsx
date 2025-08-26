@@ -20,20 +20,15 @@ interface Sparkle {
 
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [showMessage, setShowMessage] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [liked, setLiked] = useState(false);
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
   const [showSecret, setShowSecret] = useState(false);
-  const [currentFlowerId, setCurrentFlowerId] = useState<number>(
-    LAST_FLOWER
-  );
+  const [currentFlowerId, setCurrentFlowerId] = useState<number>(LAST_FLOWER);
 
   // New states for transition animation
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [displayFlowerId, setDisplayFlowerId] = useState<number>(
-    LAST_FLOWER
-  );
+  const [displayFlowerId, setDisplayFlowerId] = useState<number>(LAST_FLOWER);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [translateX, setTranslateX] = useState(0);
@@ -118,22 +113,26 @@ const Page = () => {
     if (currentFlowerId !== displayFlowerId) {
       setIsTransitioning(true);
       setIsVisible(false);
-      setShowMessage(false);
 
-      // After fade out completes, update display and fade in
+      // After fade out completes, update display
       setTimeout(() => {
         setDisplayFlowerId(currentFlowerId);
-        setTimeout(() => setShowMessage(true), 500);
-        setIsVisible(true);
-        setIsTransitioning(false);
-      }, 1000); // Adjust timing to match your CSS transition
+        // Don't set isVisible here - wait for Spotify to load
+      }, 400); // Adjust timing to match your CSS transition
     }
   }, [currentFlowerId, displayFlowerId]);
+
+  // Handle Spotify iframe load completion
+  const handleSpotifyLoaded = () => {
+    if (isTransitioning) {
+      setIsVisible(true);
+      setIsTransitioning(false);
+    }
+  };
 
   useEffect(() => {
     // Trigger animations on mount
     setIsVisible(true);
-    setTimeout(() => setShowMessage(true), 1500);
 
     // Generate floating particles
     const newParticles = Array.from({ length: 12 }, (_, i) => ({
@@ -218,22 +217,22 @@ const Page = () => {
       {/* Navigation buttons  */}
       <div className="absolute top-4 left-4 flex gap-2 z-10">
         {flowers.map((_, index) => {
-          if(index > LAST_FLOWER) return null;
+          if (index > LAST_FLOWER) return null;
           return (
             <button
               key={index}
               onClick={() => changeFlower(index)}
               className={`w-8 h-8 text-gray-400 rounded-full border-2 border-white/50 transition-all duration-200 ${
                 displayFlowerId === index
-                ? "bg-white/80 scale-110"
-                : "bg-white/30 hover:bg-white/50"
-            } ${isTransitioning ? "pointer-events-none opacity-50" : ""}`}
-            disabled={isTransitioning}
-          >
-            {index + 1}
-          </button>
-        )
-      })}
+                  ? "bg-white/80 scale-110"
+                  : "bg-white/30 hover:bg-white/50"
+              } ${isTransitioning ? "pointer-events-none opacity-50" : ""}`}
+              disabled={isTransitioning}
+            >
+              {index + 1}
+            </button>
+          );
+        })}
       </div>
       {/* Secret Easter Egg */}
       <div
@@ -302,8 +301,8 @@ const Page = () => {
         handleShare={handleShare}
         createSparkle={createSparkle}
         liked={liked}
-        showMessage={showMessage}
         footerMessage={footerMessage}
+        onSpotifyLoaded={handleSpotifyLoaded}
       />
 
       {/* Floating Hearts Animation */}
