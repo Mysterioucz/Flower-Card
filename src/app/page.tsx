@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import FlowerCard from "@components/flower_card";
+import { Flower, flowers, footerMessage } from "@/data/flower";
+import { LAST_FLOWER } from "@/data/helper";
 
 interface Particle {
   id: number;
@@ -23,7 +25,110 @@ const Page = () => {
   const [liked, setLiked] = useState(false);
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
   const [showSecret, setShowSecret] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [currentFlowerId, setCurrentFlowerId] = useState<number>(
+    LAST_FLOWER
+  );
+
+  // New states for transition animation
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [displayFlowerId, setDisplayFlowerId] = useState<number>(
+    LAST_FLOWER
+  );
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [translateX, setTranslateX] = useState(0);
+
+  // Handle touch/mouse start
+  const handleStart = (clientX: number) => {
+    setIsDragging(true);
+    setStartX(clientX);
+  };
+
+  // Handle touch/mouse move
+  const handleMove = (clientX: number) => {
+    if (!isDragging) return;
+
+    const deltaX = clientX - startX;
+    setTranslateX(deltaX);
+  };
+
+  // Handle touch/mouse end
+  const handleEnd = () => {
+    if (!isDragging) return;
+
+    setIsDragging(false);
+    const threshold = 100; // Minimum swipe distance
+
+    if (Math.abs(translateX) > threshold) {
+      if (translateX > 0 && currentFlowerId > 0) {
+        // Swipe right - go to previous card
+        console.log("Swiped right");
+        setCurrentFlowerId((prev) => prev - 1);
+      } else if (translateX < 0 && currentFlowerId < LAST_FLOWER) {
+        // Swipe left - go to next card
+        console.log("Swiped left");
+        setCurrentFlowerId((prev) => prev + 1);
+      }
+    }
+
+    setTranslateX(0);
+  };
+
+  // Mouse events
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+    handleStart(e.clientX);
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+    handleMove(e.clientX);
+  const handleMouseUp = () => handleEnd();
+
+  // Touch events
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) =>
+    handleStart(e.touches[0].clientX);
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) =>
+    handleMove(e.touches[0].clientX);
+  const handleTouchEnd = () => handleEnd();
+
+  // Add global mouse event listeners
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        e.preventDefault();
+        handleMove(e.clientX);
+      }
+    };
+
+    const handleGlobalMouseUp = () => {
+      if (isDragging) {
+        handleEnd();
+      }
+    };
+
+    if (isDragging) {
+      document.addEventListener("mousemove", handleGlobalMouseMove);
+      document.addEventListener("mouseup", handleGlobalMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleGlobalMouseMove);
+      document.removeEventListener("mouseup", handleGlobalMouseUp);
+    };
+  }, [isDragging, startX, translateX]);
+  // Watch for currentFlowerId changes and handle transitions
+  useEffect(() => {
+    if (currentFlowerId !== displayFlowerId) {
+      setIsTransitioning(true);
+      setIsVisible(false);
+      setShowMessage(false);
+
+      // After fade out completes, update display and fade in
+      setTimeout(() => {
+        setDisplayFlowerId(currentFlowerId);
+        setTimeout(() => setShowMessage(true), 500);
+        setIsVisible(true);
+        setIsTransitioning(false);
+      }, 1000); // Adjust timing to match your CSS transition
+    }
+  }, [currentFlowerId, displayFlowerId]);
 
   useEffect(() => {
     // Trigger animations on mount
@@ -45,21 +150,14 @@ const Page = () => {
       ][i % 4],
     }));
     setParticles(newParticles);
-
-    // Mouse tracking for parallax effect
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
   }, []);
+
+  // Function to change flower with animation
+  const changeFlower = (newFlowerId: number) => {
+    if (newFlowerId !== currentFlowerId && !isTransitioning) {
+      setCurrentFlowerId(newFlowerId);
+    }
+  };
 
   const handleLike = () => {
     setLiked(!liked);
@@ -107,18 +205,36 @@ const Page = () => {
     }, 1000);
   };
 
-  const message = {
-    secret:
-      "You found the secret! 🌟 <br /> พี่ขอบคุณจริงๆ การมีเราเข้ามาในชีวิตพี่ทำให้พี่ Happy มากๆ",
-    meaning:
-      "Hydrangeas symbolize heartfelt emotions, gratitude, and understanding. <br /> They're often given as a gesture of appreciation and to convey deep feelings.",
-    footer:
-      "Every flower blooms in its own time, just like every feeling finds its moment to be shared.",
-  };
-
   return (
-    <div className="gap-4 min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-indigo-500 flex items-center justify-center p-4 relative overflow-hidden">
-
+    <div
+      className={`gap-4 min-h-screen max-h-screen ${flowers[displayFlowerId].color.backgroundColor} transition-colors duration-500 flex items-center justify-center p-4 relative overflow-hidden`}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Navigation buttons  */}
+      <div className="absolute top-4 left-4 flex gap-2 z-10">
+        {flowers.map((_, index) => {
+          if(index > LAST_FLOWER) return null;
+          return (
+            <button
+              key={index}
+              onClick={() => changeFlower(index)}
+              className={`w-8 h-8 text-gray-400 rounded-full border-2 border-white/50 transition-all duration-200 ${
+                displayFlowerId === index
+                ? "bg-white/80 scale-110"
+                : "bg-white/30 hover:bg-white/50"
+            } ${isTransitioning ? "pointer-events-none opacity-50" : ""}`}
+            disabled={isTransitioning}
+          >
+            {index + 1}
+          </button>
+        )
+      })}
+      </div>
       {/* Secret Easter Egg */}
       <div
         className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center z-1"
@@ -135,7 +251,9 @@ const Page = () => {
             <div className="text-2xl mb-2">🎁</div>
             <p
               className="text-sm text-gray-700 font-medium"
-              dangerouslySetInnerHTML={{ __html: message.secret }}
+              dangerouslySetInnerHTML={{
+                __html: flowers[displayFlowerId].meaning,
+              }}
             />
             <button
               className="mt-2 text-xs text-purple-600 underline"
@@ -178,14 +296,14 @@ const Page = () => {
 
       {/* Main Card with Enhanced Effects */}
       <FlowerCard
-        flowerName="Hydrangea"
-        message={message}
+        flower={flowers[displayFlowerId]}
         isVisible={isVisible}
         handleLike={handleLike}
         handleShare={handleShare}
         createSparkle={createSparkle}
         liked={liked}
         showMessage={showMessage}
+        footerMessage={footerMessage}
       />
 
       {/* Floating Hearts Animation */}

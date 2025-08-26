@@ -1,0 +1,1 @@
+export const LAST_FLOWER = 1; // The latest given flower
