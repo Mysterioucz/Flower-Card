@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import FlowerCard from "@components/flower_card";
 import { Flower, flowers, footerMessage } from "@/data/flower";
 import { LAST_FLOWER } from "@/data/helper";
+import { redirect } from "next/navigation";
 
 interface Particle {
   id: number;
@@ -19,6 +20,9 @@ interface Sparkle {
 }
 
 const Page = () => {
+  // Temporary redirect to /message
+  redirect("/message");
+
   const [isVisible, setIsVisible] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [liked, setLiked] = useState(false);
