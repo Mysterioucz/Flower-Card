@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import { Athiti } from "next/font/google";
 import "../style.css";
 import { spotifyData, SpotifyData } from "@/data/spotify";
@@ -22,15 +22,35 @@ const sendMessage = async (message: string) => {
 };
 
 function SpotifyContainer(spotify: SpotifyData) {
+    const iframeRef = useRef<HTMLIFrameElement>(null);
+    const inIframe = useRef(false);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (
+                document.activeElement &&
+                document.activeElement === iframeRef.current
+            ) {
+                if (!inIframe.current) {
+                    // Detected iframe focus (user clicked iframe)
+                    console.log(`Punpun click on ${spotify.title} `);
+                    sendMessage(`Punpun click on ${spotify.title} `);
+                    inIframe.current = true;
+                }
+            } else {
+                inIframe.current = false;
+            }
+        }, 200);
+
+        return () => clearInterval(interval);
+    }, []);
     return (
         <div
             className={`flex flex-col w-full max-w-2xl p-4 bg-secondary rounded-xl shadow-lg transition-opacity duration-400`}
-            onClick={() => {
-                sendMessage(`Punpun goes to Spotify: ${spotify.title}`);
-            }}
         >
             <h2 className="text-lg font-semibold mb-2">{spotify.title}</h2>
             <iframe
+                ref={iframeRef}
                 src={spotify.src}
                 width="100%"
                 height="152"
@@ -38,9 +58,7 @@ function SpotifyContainer(spotify: SpotifyData) {
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"
                 className="rounded"
-                onClick={() => {
-                    console.log("iframe clicked");
-                }}
+                tabIndex={0}
             ></iframe>
         </div>
     );
