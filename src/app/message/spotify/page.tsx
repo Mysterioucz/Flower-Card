@@ -33,7 +33,7 @@ function SpotifyContainer(spotify: SpotifyData) {
             ) {
                 if (!inIframe.current) {
                     // Detected iframe focus (user clicked iframe)
-                    console.log(`Punpun click on ${spotify.title} `);
+                    // console.log(`Punpun click on ${spotify.title} `);
                     sendMessage(`Punpun click on ${spotify.title} `);
                     inIframe.current = true;
                 }
