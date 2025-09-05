@@ -1,7 +1,7 @@
 "use client";
 import MessageContainer from "@/components/message_container";
 import { footerMessage, MessageArray } from "@/data/message";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { Athiti } from "next/font/google";
 import "./style.css";
 import AudioPlayer from "@/components/audioPlayer";
@@ -135,44 +135,46 @@ export default function Page() {
     }, [isDragging, startX, translateX]);
 
     return (
-        <div
-            className={`flex min-h-screen min-w-screen flex-col items-center justify-center w-full h-full p-4 space-y-4 bg-background text-text ${athiti.className}`}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-        >
-            <MessageContainer
-                messages={currentMessage.content}
-                header={currentMessage.title}
-                fadeState={fadeState}
-            />
+        <Suspense>
             <div
-                className={`text-center text-accent text-sm mt-4 whitespace-pre-line transition-opacity duration-1000 ${
-                    showFooter ? "opacity-100" : "opacity-0"
-                }`}
+                className={`flex min-h-screen min-w-screen flex-col items-center justify-center w-full h-full p-4 space-y-4 bg-background text-text ${athiti.className}`}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
             >
-                {displayIndex === MessageArray.length - 1 && (
-                    <p>{footerMessage}</p>
-                )}
+                <MessageContainer
+                    messages={currentMessage.content}
+                    header={currentMessage.title}
+                    fadeState={fadeState}
+                />
+                <div
+                    className={`text-center text-accent text-sm mt-4 whitespace-pre-line transition-opacity duration-1000 ${
+                        showFooter ? "opacity-100" : "opacity-0"
+                    }`}
+                >
+                    {displayIndex === MessageArray.length - 1 && (
+                        <p>{footerMessage}</p>
+                    )}
+                </div>
+                <button
+                    className="bg-accent text-primary py-2 px-4 rounded "
+                    onClick={() => {
+                        if (audioRef.current?.paused) {
+                            sendMessage("Punpun Play Music!");
+                            audioRef.current.play().catch(() => {});
+                        } else {
+                            audioRef.current?.pause();
+                            sendMessage("PunpunPause Music!");
+                        }
+                    }}
+                >
+                    Play/Pause Music!
+                </button>
+                <AudioPlayer audioRef={audioRef} />
             </div>
-            <button
-                className="bg-accent text-primary py-2 px-4 rounded "
-                onClick={() => {
-                    if (audioRef.current?.paused) {
-                        sendMessage("Punpun Play Music!");
-                        audioRef.current.play().catch(() => {});
-                    } else {
-                        audioRef.current?.pause();
-                        sendMessage("PunpunPause Music!");
-                    }
-                }}
-            >
-                Play/Pause Music!
-            </button>
-            <AudioPlayer audioRef={audioRef} />
-        </div>
+        </Suspense>
     );
 }

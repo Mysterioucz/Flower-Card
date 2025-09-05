@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Athiti } from "next/font/google";
 import "../style.css";
 import { spotifyData, SpotifyData } from "@/data/spotify";
@@ -7,6 +7,38 @@ import { useRouter } from "next/navigation";
 import { MessageArray } from "@/data/message";
 
 const athiti = Athiti({ subsets: ["latin"], weight: "500" });
+
+function SpotifyContainer(spotify: SpotifyData) {
+    return (
+        <div
+            className={`flex flex-col w-full max-w-2xl p-4 bg-secondary rounded-xl shadow-lg transition-opacity duration-400`}
+        >
+            <h2 className="text-lg font-semibold mb-2">{spotify.title}</h2>
+                <iframe
+                    src={spotify.src}
+                    width="100%"
+                    height="152"
+                    allowFullScreen
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                    className="rounded"
+                ></iframe>
+        </div>
+    );
+};
+
+function SpotifyList() {
+    return (
+        <div
+            className={`flex flex-col items-center gap-4 w-full max-w-2xl h-full p-4 space-y-2 overflow-y-auto transition-opacity duration-400`}
+        >
+            <h2 className="text-lg font-semibold mb-2">เอาเพลงมาฝากจ๊ะ</h2>
+            {spotifyData.map((spotify, index) => (
+                <SpotifyContainer key={index} {...spotify} />
+            ))}
+        </div>
+    );
+};
 
 export default function Page() {
     const router = useRouter();
@@ -98,44 +130,19 @@ export default function Page() {
         };
     }, [isDragging, startX, translateX]);
 
-    const SpotifyContainer = (spotify: SpotifyData) => (
-        <div
-            className={`flex flex-col w-full max-w-2xl p-4 bg-secondary rounded-xl shadow-lg transition-opacity duration-400`}
-        >
-            <h2 className="text-lg font-semibold mb-2">{spotify.title}</h2>
-            <iframe
-                src={spotify.src}
-                width="100%"
-                height="152"
-                allowFullScreen
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-                className="rounded"
-            ></iframe>
-        </div>
-    );
-
-    const SpotifyList = () => (
-        <div
-            className={`flex flex-col items-center gap-4 w-full max-w-2xl h-full p-4 space-y-2 overflow-y-auto transition-opacity duration-400`}
-        >
-            <h2 className="text-lg font-semibold mb-2">เอาเพลงมาฝากจ๊ะ</h2>
-            {spotifyData.map((spotify, index) => (
-                <SpotifyContainer key={index} {...spotify} />
-            ))}
-        </div>
-    );
     return (
-        <div
-            className={`flex min-h-screen min-w-screen flex-col items-center justify-center w-full h-full p-4 space-y-4 bg-background text-text ${athiti.className}`}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-        >
-            <SpotifyList />
-        </div>
+        <Suspense>
+            <div
+                className={`flex min-h-screen min-w-screen flex-col items-center justify-center w-full h-full p-4 space-y-4 bg-background text-text ${athiti.className}`}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+            >
+                <SpotifyList />
+            </div>
+        </Suspense>
     );
 }
