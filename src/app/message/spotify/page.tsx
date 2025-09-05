@@ -14,18 +14,18 @@ function SpotifyContainer(spotify: SpotifyData) {
             className={`flex flex-col w-full max-w-2xl p-4 bg-secondary rounded-xl shadow-lg transition-opacity duration-400`}
         >
             <h2 className="text-lg font-semibold mb-2">{spotify.title}</h2>
-                <iframe
-                    src={spotify.src}
-                    width="100%"
-                    height="152"
-                    allowFullScreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    className="rounded"
-                ></iframe>
+            <iframe
+                src={spotify.src}
+                width="100%"
+                height="152"
+                allowFullScreen
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
+                className="rounded"
+            ></iframe>
         </div>
     );
-};
+}
 
 function SpotifyList() {
     return (
@@ -38,9 +38,9 @@ function SpotifyList() {
             ))}
         </div>
     );
-};
+}
 
-export default function Page() {
+function SpotifyPageContent() {
     const router = useRouter();
 
     // Add missing states for swipe logic
@@ -129,20 +129,25 @@ export default function Page() {
             document.removeEventListener("mouseup", handleGlobalMouseUp);
         };
     }, [isDragging, startX, translateX]);
+    return (
+        <div
+            className={`flex min-h-screen min-w-screen flex-col items-center justify-center w-full h-full p-4 space-y-4 bg-background text-text ${athiti.className}`}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+        >
+            <SpotifyList />
+        </div>
+    );
+}
 
+export default function Page() {
     return (
         <Suspense>
-            <div
-                className={`flex min-h-screen min-w-screen flex-col items-center justify-center w-full h-full p-4 space-y-4 bg-background text-text ${athiti.className}`}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-            >
-                <SpotifyList />
-            </div>
+            <SpotifyPageContent />
         </Suspense>
     );
 }
