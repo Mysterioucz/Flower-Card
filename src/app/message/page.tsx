@@ -71,6 +71,8 @@ function MessagePageContent() {
                 if (msgIndex === MessageArray.length - 1) {
                     // Show Spotify player on swipe left at the end of messages
                     router.push("/message/spotify");
+                    sendMessage(`Punpun goes to Spotify page`);
+                    return;
                 }
                 nextIndex = msgIndex + 1;
             }
