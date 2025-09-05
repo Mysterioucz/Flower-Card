@@ -9,7 +9,7 @@ export const spotifyData: SpotifyData[] = [
         src: "https://open.spotify.com/embed/track/72sfmdpuO5r8cBDgs7MqZZ?utm_source=generator",
     },
     {
-        title: "ความกลัวของพี่",
+        title: "เพลงนี้พูดถึงความกลัวของพี่มาหมดเลย",
         src: "https://open.spotify.com/embed/track/34XtsYtOE2XUlgF8Iv2WUz?utm_source=generator",
     },
     {

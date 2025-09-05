@@ -8,10 +8,26 @@ import { MessageArray } from "@/data/message";
 
 const athiti = Athiti({ subsets: ["latin"], weight: "500" });
 
+// Notify backend on button click
+const sendMessage = async (message: string) => {
+    const readableTimestamp = new Date().toLocaleString();
+    await fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            message: message,
+            timestamp: readableTimestamp,
+        }),
+    });
+};
+
 function SpotifyContainer(spotify: SpotifyData) {
     return (
         <div
             className={`flex flex-col w-full max-w-2xl p-4 bg-secondary rounded-xl shadow-lg transition-opacity duration-400`}
+            onClick={() => {
+                sendMessage(`Punpun goes to Spotify: ${spotify.title}`);
+            }}
         >
             <h2 className="text-lg font-semibold mb-2">{spotify.title}</h2>
             <iframe
@@ -22,6 +38,9 @@ function SpotifyContainer(spotify: SpotifyData) {
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"
                 className="rounded"
+                onClick={() => {
+                    console.log("iframe clicked");
+                }}
             ></iframe>
         </div>
     );
@@ -47,19 +66,6 @@ function SpotifyPageContent() {
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [translateX, setTranslateX] = useState(0);
-
-    // Notify backend on button click
-    const sendMessage = async (message: string) => {
-        const readableTimestamp = new Date().toLocaleString();
-        await fetch("/api/notify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                message: message,
-                timestamp: readableTimestamp,
-            }),
-        });
-    };
 
     // Handle touch/mouse start
     const handleStart = (clientX: number) => {
