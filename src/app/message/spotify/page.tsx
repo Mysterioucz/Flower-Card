@@ -1,33 +1,52 @@
 "use client";
-import MessageContainer from "@/components/message_container";
-import { footerMessage, MessageArray } from "@/data/message";
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Athiti } from "next/font/google";
-import "./style.css";
-import AudioPlayer from "@/components/audioPlayer";
-import { useRouter, useSearchParams } from "next/navigation";
+import "../style.css";
+import { spotifyData, SpotifyData } from "@/data/spotify";
+import { useRouter } from "next/navigation";
+import { MessageArray } from "@/data/message";
 
 const athiti = Athiti({ subsets: ["latin"], weight: "500" });
 
-function MessagePageContent() {
+function SpotifyContainer(spotify: SpotifyData) {
+    return (
+        <div
+            className={`flex flex-col w-full max-w-2xl p-4 bg-secondary rounded-xl shadow-lg transition-opacity duration-400`}
+        >
+            <h2 className="text-lg font-semibold mb-2">{spotify.title}</h2>
+            <iframe
+                src={spotify.src}
+                width="100%"
+                height="152"
+                allowFullScreen
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
+                className="rounded"
+            ></iframe>
+        </div>
+    );
+}
+
+function SpotifyList() {
+    return (
+        <div
+            className={`flex flex-col items-center gap-4 w-full max-w-2xl h-full p-4 space-y-2 overflow-y-auto transition-opacity duration-400`}
+        >
+            <h2 className="text-lg font-semibold mb-2">เอาเพลงมาฝากจ๊ะ</h2>
+            {spotifyData.map((spotify, index) => (
+                <SpotifyContainer key={index} {...spotify} />
+            ))}
+        </div>
+    );
+}
+
+function SpotifyPageContent() {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const initialIndex = searchParams.get("index")
-        ? Number(searchParams.get("index"))
-        : 0;
-    const [msgIndex, setMsgIndex] = useState(initialIndex);
-    const [displayIndex, setDisplayIndex] = useState(initialIndex);
-    const [fadeState, setFadeState] = useState<"in" | "out">("in");
-    const [showFooter, setShowFooter] = useState<boolean>(false);
-    const currentMessage =
-        MessageArray[Math.min(displayIndex, MessageArray.length - 1)];
 
     // Add missing states for swipe logic
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [translateX, setTranslateX] = useState(0);
-
-    const audioRef = useRef<HTMLAudioElement>(null);
 
     // Notify backend on button click
     const sendMessage = async (message: string) => {
@@ -62,33 +81,10 @@ function MessagePageContent() {
 
         setIsDragging(false);
         const threshold = 100; // Minimum swipe distance
-
         if (Math.abs(translateX) > threshold) {
-            let nextIndex = msgIndex;
-            if (translateX > 0 && msgIndex > 0) {
-                nextIndex = msgIndex - 1;
-            } else if (translateX < 0 && msgIndex < MessageArray.length) {
-                if (msgIndex === MessageArray.length - 1) {
-                    // Show Spotify player on swipe left at the end of messages
-                    router.push("/message/spotify");
-                }
-                nextIndex = msgIndex + 1;
-            }
-
-            if (nextIndex !== msgIndex) {
-                sendMessage(`Punpun goes to page ${nextIndex + 1}`);
-                setFadeState("out");
-                setShowFooter(false);
-                setTimeout(() => {
-                    setMsgIndex(nextIndex);
-                    setDisplayIndex(nextIndex);
-                    setFadeState("in");
-
-                    // Show footer for last message
-                    if (nextIndex == MessageArray.length - 1) {
-                        setTimeout(() => setShowFooter(true), 800); // match duration-800
-                    }
-                }, 400); // match transition duration
+            if (translateX > 0) {
+                sendMessage(`Punpun goes to message page `);
+                router.push(`/message?index=${MessageArray.length - 1}`);
             }
         }
         setTranslateX(0);
@@ -133,7 +129,6 @@ function MessagePageContent() {
             document.removeEventListener("mouseup", handleGlobalMouseUp);
         };
     }, [isDragging, startX, translateX]);
-
     return (
         <div
             className={`flex min-h-screen min-w-screen flex-col items-center justify-center w-full h-full p-4 space-y-4 bg-background text-text ${athiti.className}`}
@@ -144,35 +139,7 @@ function MessagePageContent() {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
         >
-            <MessageContainer
-                messages={currentMessage.content}
-                header={currentMessage.title}
-                fadeState={fadeState}
-            />
-            <div
-                className={`text-center text-accent text-sm mt-4 whitespace-pre-line transition-opacity duration-1000 ${
-                    showFooter ? "opacity-100" : "opacity-0"
-                }`}
-            >
-                {displayIndex === MessageArray.length - 1 && (
-                    <p>{footerMessage}</p>
-                )}
-            </div>
-            <button
-                className="bg-accent text-primary py-2 px-4 rounded "
-                onClick={() => {
-                    if (audioRef.current?.paused) {
-                        sendMessage("Punpun Play Music!");
-                        audioRef.current.play().catch(() => {});
-                    } else {
-                        audioRef.current?.pause();
-                        sendMessage("PunpunPause Music!");
-                    }
-                }}
-            >
-                Play/Pause Music!
-            </button>
-            <AudioPlayer audioRef={audioRef} />
+            <SpotifyList />
         </div>
     );
 }
@@ -180,7 +147,7 @@ function MessagePageContent() {
 export default function Page() {
     return (
         <Suspense>
-            <MessagePageContent />
+            <SpotifyPageContent />
         </Suspense>
     );
 }
