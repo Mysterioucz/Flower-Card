@@ -21,7 +21,7 @@ interface Sparkle {
 
 const Page = () => {
   // Temporary redirect to /message
-  redirect("/message");
+  // redirect("/message");
 
   const [isVisible, setIsVisible] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
